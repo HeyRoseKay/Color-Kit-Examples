@@ -9,7 +9,6 @@
 import SwiftUI
 import ColorKit
 
-
 let gradient1: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r: 252/255, g: 70/255, b: 107/255, a: 1), location: 0),
                                       .init(color: ColorToken(colorSpace: .sRGB, r: 63/255, g: 94/255, b: 251/255, a: 1), location: 1)]
 let gradient2: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r: 63/255, g: 43/255, b: 150/255, a: 1), location: 0),
@@ -23,21 +22,33 @@ let rainbow: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r
                                     .init(color: ColorToken(colorSpace: .sRGB, r: 255/255, g: 0/255, b: 0/255, a: 1), location: 0.97)]
 
 // MARK: - Linear
-
 struct SimpleLinearExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(.defaultValue)
     var body: some View {
-        ZStack {
-            Color(white: 0.2).edgesIgnoringSafeArea(.all)
-            LinearGradientPicker()
-            .environmentObject(manager)
-                .padding(30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                LinearGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }
+                .navigationTitle("Simple Linear Gradient")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                LinearGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }.navigationBarTitle("Simple Linear Gradient")
         }
-        
     }
 }
-
-
 
 struct LinearGradientExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient2, startPoint: .leading, endPoint: .trailing))
@@ -77,29 +88,56 @@ struct LinearGradientExample: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(white: 0.2)
-                .edgesIgnoringSafeArea(.all)
-            VStack(spacing: 50) {
-                LinearGradientPicker()
-                .environmentObject(manager)
-                RGBColorPicker(selectedColor)
-                HStack {
-                    Button(action: delete) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                    Button(action: add) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                }.frame(height: 30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                VStack(spacing: 50) {
+                    LinearGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
             }
-            .padding(40)
-        }.navigationBarTitle("Linear Gradient Picker")
-        
+                .navigationTitle("Linear Gradient Picker")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                VStack(spacing: 50) {
+                    LinearGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
+            }.navigationBarTitle("Linear Gradient Picker")
+        }
     }
 }
 
@@ -107,16 +145,30 @@ struct LinearGradientExample: View {
 struct SimpleRadialExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient1, center: .center, startRadius: 0, endRadius: 100))
     var body: some View {
-        ZStack {
-            Color(white: 0.2).edgesIgnoringSafeArea(.all)
-            RadialGradientPicker()
-            .environmentObject(manager)
-                .padding(30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                RadialGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }
+                .navigationTitle("Simple Radial Gradient")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                RadialGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }.navigationBarTitle("Simple Radial Gradient")
         }
     }
 }
-
-
 
 struct RadialGradientExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient1, center: .center, startRadius: 0, endRadius: 100))
@@ -156,43 +208,84 @@ struct RadialGradientExample: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(white: 0.2)
-                .edgesIgnoringSafeArea(.all)
-            VStack(spacing: 50) {
-                RadialGradientPicker()
-                .environmentObject(manager)
-                RGBColorPicker(selectedColor)
-                HStack {
-                    Button(action: delete) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                    Button(action: add) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                }.frame(height: 30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                VStack(spacing: 50) {
+                    RadialGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
             }
-            .padding(40)
-        }.navigationBarTitle("Radial Gradient Picker")
-        
+                .navigationTitle("Radial Gradient Picker")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                VStack(spacing: 50) {
+                    RadialGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
+            }.navigationBarTitle("Radial Gradient Picker")
+        }
     }
 }
 
 // MARK: - Angular
-
-
 struct SimpleAngularExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: rainbow, center: .center, startAngle:  0, endAngle: 0.95))
     var body: some View {
-        ZStack {
-            Color(white: 0.2).edgesIgnoringSafeArea(.all)
-            AngularGradientPicker()
-            .environmentObject(manager)
-                .padding(30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                AngularGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }
+                .navigationTitle("Simple Angular Gradient")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                AngularGradientPicker().environmentObject(manager)
+                    .padding(30)
+            }.navigationBarTitle("Simple Angular Gradient")
         }
     }
 }
@@ -235,32 +328,60 @@ struct AngularGradientExample: View {
     }
     
     var body: some View {
-        ZStack {
-            Color(white: 0.2)
-                .edgesIgnoringSafeArea(.all)
-            VStack(spacing: 50) {
-                AngularGradientPicker()
-                .environmentObject(manager)
-                RGBColorPicker(selectedColor)
-                HStack {
-                    Button(action: delete) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                    Button(action: add) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                }.frame(height: 30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                VStack(spacing: 50) {
+                    AngularGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
             }
-            .padding(40)
-        }.navigationBarTitle("Angular Gradient Picker")
+                .navigationTitle("Angular Gradient Picker")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                VStack(spacing: 50) {
+                    AngularGradientPicker().environmentObject(manager)
+                    RGBColorPicker(selectedColor)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }.padding(40)
+            }.navigationBarTitle("Angular Gradient Picker")
+        }
     }
 }
-// MARK: - Full Example 
 
+// MARK: - Full Example
 struct FullGradientPickerExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(.defaultValue)
     @State var defaultColor: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.2, b: 0.4)
@@ -299,27 +420,55 @@ struct FullGradientPickerExample: View {
     }
 
     var body: some View {
-        ZStack {
-            Color(white: 0.2)
-                .edgesIgnoringSafeArea(.all)
-            VStack {
-                GradientPicker(_manager)
-                RGBColorPicker(selectedColor).padding(40)
-                HStack {
-                    Button(action: delete) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                    Button(action: add) {
-                        Image(systemName: "plus")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                    }
-                }.frame(height: 30)
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                VStack {
+                    GradientPicker(_manager)
+                    RGBColorPicker(selectedColor).padding(40)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }
             }
-        }.navigationBarTitle("Gradient Picker", displayMode: .inline)
+                .navigationTitle("Gradient Picker")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                VStack {
+                    GradientPicker(_manager)
+                    RGBColorPicker(selectedColor).padding(40)
+                    HStack {
+                        Button(action: delete) {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                        Button(action: add) {
+                            Image(systemName: "plus")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        }
+                    }.frame(height: 30)
+                }
+            }.navigationBarTitle("Gradient Picker", displayMode: .inline)
+        }
     }
 }
-
-

@@ -9,30 +9,59 @@
 import SwiftUI
 import ColorKit
 
-
 struct ContentView: View {
     var body: some View {
-        NavigationView {
-            List {
-                Section(header: Text("Color Pickers")) {
-                    NavigationLink("RGB", destination: RGBExample())
-                    NavigationLink("Rectangular HSB", destination: HSBExample())
-                    NavigationLink("Circular HSB", destination: CircularHSBPickerExample())
-                    NavigationLink("CMYK", destination: CMYKExample())
-                    NavigationLink("Gray Scale", destination: GrayscaleExample())
-                    NavigationLink("Alpha", destination: AlphaSliderExample())
-                    NavigationLink("Full Color Picker", destination: ColorPickerExample())
+        if #available(iOS 17.0, *) {
+            NavigationStack {
+                List {
+                    Section(header: Text("Color Pickers")) {
+                        NavigationLink("RGB", destination: RGBExample())
+                        NavigationLink("Rectangular HSB", destination: HSBExample())
+                        NavigationLink("Circular HSB", destination: CircularHSBPickerExample())
+                        NavigationLink("CMYK", destination: CMYKExample())
+                        NavigationLink("Gray Scale", destination: GrayscaleExample())
+                        NavigationLink("Alpha", destination: AlphaSliderExample())
+                        NavigationLink("Single Color Picker", destination: SingleColorPickerExample())
+                        NavigationLink("Pallette Color Picker", destination: PalletteColorPickerExample())
+                    }
+                    Section(header: Text("Gradient Pickers")) {
+                        NavigationLink("Simple Linear", destination: SimpleLinearExample())
+                        NavigationLink("Linear", destination: LinearGradientExample())
+                        NavigationLink("Simple Radial", destination: SimpleRadialExample())
+                        NavigationLink("Radial", destination: RadialGradientExample())
+                        NavigationLink("Simple Angular", destination: SimpleAngularExample())
+                        NavigationLink("Angular", destination: AngularGradientExample())
+                        NavigationLink("Full Gradient Picker", destination: FullGradientPickerExample())
+                    }
                 }
-                Section(header: Text("Gradient Pickers")) {
-                    NavigationLink("Simple Linear", destination: SimpleLinearExample())
-                    NavigationLink("Linear", destination: LinearGradientExample())
-                    NavigationLink("Simple Radial", destination: SimpleRadialExample())
-                    NavigationLink("Radial", destination: RadialGradientExample())
-                    NavigationLink("Simple Angular", destination: SimpleAngularExample())
-                    NavigationLink("Angular", destination: AngularGradientExample())
-                    NavigationLink("Full Gradient Picker", destination: FullGradientPickerExample())
+                .navigationBarTitle("Color Kit")
+                .toolbarTitleDisplayMode(.inlineLarge)
+            }
+        } else {
+            NavigationView {
+                List {
+                    Section(header: Text("Color Pickers")) {
+                        NavigationLink("RGB", destination: RGBExample())
+                        NavigationLink("Rectangular HSB", destination: HSBExample())
+                        NavigationLink("Circular HSB", destination: CircularHSBPickerExample())
+                        NavigationLink("CMYK", destination: CMYKExample())
+                        NavigationLink("Gray Scale", destination: GrayscaleExample())
+                        NavigationLink("Alpha", destination: AlphaSliderExample())
+                        NavigationLink("Single Color Picker", destination: SingleColorPickerExample())
+                        NavigationLink("Pallette Color Picker", destination: PalletteColorPickerExample())
+                    }
+                    Section(header: Text("Gradient Pickers")) {
+                        NavigationLink("Simple Linear", destination: SimpleLinearExample())
+                        NavigationLink("Linear", destination: LinearGradientExample())
+                        NavigationLink("Simple Radial", destination: SimpleRadialExample())
+                        NavigationLink("Radial", destination: RadialGradientExample())
+                        NavigationLink("Simple Angular", destination: SimpleAngularExample())
+                        NavigationLink("Angular", destination: AngularGradientExample())
+                        NavigationLink("Full Gradient Picker", destination: FullGradientPickerExample())
+                    }
                 }
-            }.navigationBarTitle("Color Kit")
+                .navigationBarTitle("Color Kit")
+            }
         }
     }
 }

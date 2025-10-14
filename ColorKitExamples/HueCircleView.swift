@@ -11,8 +11,6 @@ import UIKit
 import simd
 import MetalKit
 
-
-
 let shader = """
                     #include <metal_stdlib>
                     using namespace metal;
@@ -214,7 +212,6 @@ struct HueCircleMetalView: UIViewRepresentable {
         
     }
 }
-
 
 struct HueCircleView: View {
     var body: some View {

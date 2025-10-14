@@ -11,8 +11,6 @@ import Sliders
 import Shapes
 import ColorKit
 
-
-
 struct BrightnessSliderStyle: LSliderStyle {
     let color: ColorToken
     
@@ -109,12 +107,28 @@ struct CircularHSBPickerExample: View {
     @State var color: ColorToken = ColorToken(hue: 0.3, saturation: 1, brightness: 0.6)
     
     var body: some View {
-        ZStack {
-            Color(white: 0.2)
-            .edgesIgnoringSafeArea(.all)
-            CircularHSBColorPicker(color: $color)
-                .padding(50)
-        }.navigationBarTitle("Circular HSB Picker")
+        if #available(iOS 17.0, *) {
+            ZStack {
+                Color(uiColor: .secondarySystemBackground)
+                    .edgesIgnoringSafeArea(.all)
+                CircularHSBColorPicker(color: $color)
+                    .padding(50)
+            }
+                .navigationTitle("Circular HSB Picker")
+                .navigationBarTitleDisplayMode(.inline)
+        } else {
+            ZStack {
+                if #available(iOS 15.0, *) {
+                    Color(uiColor: .secondarySystemBackground)
+                        .edgesIgnoringSafeArea(.all)
+                } else {
+                    Color(white: 0.2)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                CircularHSBColorPicker(color: $color)
+                    .padding(50)
+            }.navigationBarTitle("Circular HSB Picker")
+        }
     }
 }
 
