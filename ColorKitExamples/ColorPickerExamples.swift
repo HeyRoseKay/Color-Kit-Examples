@@ -9,7 +9,7 @@
 import SwiftUI
 import ColorKit
 
-// MARK: RGB
+// MARK: RGB Example View
 struct RGBExample: View {
     @State var color: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.5, b: 0.8)
     var overlay: some View {
@@ -60,7 +60,7 @@ struct RGBExample: View {
     }
 }
 
-// MARK: HSB
+// MARK: HSB Example View
 struct HSBExample: View {
     @State var color: ColorToken = ColorToken(hue: 0.2, saturation: 0.5, brightness: 0.5)
     var overlay: some View {
@@ -111,7 +111,7 @@ struct HSBExample: View {
     }
 }
 
-// MARK: - CMYK
+// MARK: - CMYK Example View
 struct CMYKExample: View {
     @State var color: ColorToken = ColorToken(cyan: 0.5, magenta: 0.5, yellow: 0.5, keyBlack: 0.5)
     var overlay: some View {
@@ -162,7 +162,7 @@ struct CMYKExample: View {
     }
 }
 
-// MARK: - Gray Scale
+// MARK: - Gray Scale Example View
 struct GrayscaleExample: View {
     @State var color: ColorToken = ColorToken(white: 0.3)
     var overlay: some View {
@@ -213,7 +213,7 @@ struct GrayscaleExample: View {
     }
 }
 
-// MARK: Alpha
+// MARK: Alpha Example View
 struct AlphaSliderExample: View {
     @State var color: ColorToken = ColorToken(hue: 0.3, saturation: 0, brightness: 0)
     var body: some View {
@@ -244,7 +244,7 @@ struct AlphaSliderExample: View {
     }
 }
 
-// MARK: Single Color Picker
+// MARK: Single Color Picker Example
 struct SingleColorPickerExample: View {
     @State var color: ColorToken = ColorToken(hue: 0.5, saturation: 0.5, brightness: 0.5)
     var body: some View {
@@ -272,7 +272,7 @@ struct SingleColorPickerExample: View {
 }
 
 
-// MARK: Pallette Color Picker
+// MARK: Pallette Color Picker Example
 struct PalletteColorPickerExample: View {
     @ObservedObject var manager: ColorManager = ColorManager(colors: [ColorToken(hue: 0.9, saturation: 0.5, brightness: 0.5), ColorToken(hue: 0.3, saturation: 0.5, brightness: 0.5), ColorToken(hue: 0.6, saturation: 0.5, brightness: 0.5)])
     var body: some View {

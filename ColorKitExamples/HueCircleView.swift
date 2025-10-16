@@ -11,36 +11,38 @@ import UIKit
 import simd
 import MetalKit
 
+// MARK: - Shader
 let shader = """
-                    #include <metal_stdlib>
-                    using namespace metal;
+    #include <metal_stdlib>
+    using namespace metal;
 
-                    struct Vertex {
-                        float4 position [[position]];
-                        float4 color;
-                    };
+    struct Vertex {
+        float4 position [[position]];
+        float4 color;
+    };
 
-                    struct Uniforms {
-                        float4x4 modelMatrix;
-                    };
+    struct Uniforms {
+        float4x4 modelMatrix;
+    };
 
-                    vertex Vertex vertex_func(constant Vertex *vertices [[buffer(0)]],
-                                              constant Uniforms &uniforms [[buffer(1)]],
-                                              uint vid [[vertex_id]]) {
-                        float4x4 matrix = uniforms.modelMatrix;
-                        Vertex in = vertices[vid];
-                        Vertex out;
-                        out.position = matrix * float4(in.position);
-                        out.color = in.color;
-                        return out;
-                    }
+    vertex Vertex vertex_func(constant Vertex *vertices [[buffer(0)]],
+                              constant Uniforms &uniforms [[buffer(1)]],
+                              uint vid [[vertex_id]]) {
+        float4x4 matrix = uniforms.modelMatrix;
+        Vertex in = vertices[vid];
+        Vertex out;
+        out.position = matrix * float4(in.position);
+        out.color = in.color;
+        return out;
+    }
 
-                    fragment float4 fragment_func(Vertex vert [[stage_in]]) {
-                        return vert.color;
-                    }
+    fragment float4 fragment_func(Vertex vert [[stage_in]]) {
+        return vert.color;
+    }
 """
 
 // FIXME: Shader Library needs to be created with the color picker
+// MARK: - Metal View
 public class MetalView: NSObject, MTKViewDelegate {
     
     public var device: MTLDevice!
@@ -49,7 +51,6 @@ public class MetalView: NSObject, MTKViewDelegate {
     var uniformBuffer: MTLBuffer!
     var rps: MTLRenderPipelineState!
     var vertexData: [Vertex] = []
-
     
     override public init() {
         super.init()
@@ -59,7 +60,7 @@ public class MetalView: NSObject, MTKViewDelegate {
         registerShaders()
     }
     
-    func rgb(h: Float, s: Float, v: Float) -> (r: Float, g: Float, b: Float){
+    func rgb(h: Float, s: Float, v: Float) -> (r: Float, g: Float, b: Float) {
         if s == 0 { return (r: v, g: v, b: v) } // Achromatic grey
         
         let angle = Float(Int(h)%360)
@@ -87,7 +88,7 @@ public class MetalView: NSObject, MTKViewDelegate {
         }
     }
     
-    fileprivate func createVertexPoints()  {
+    fileprivate func createVertexPoints() {
         func rads(forDegree d: Float)->Float32{
             return (Float.pi*d)/180
         }
@@ -107,7 +108,6 @@ public class MetalView: NSObject, MTKViewDelegate {
             }
         }
         self.vertexData = vertices
-        
     }
     
     func createBuffers() {
@@ -116,7 +116,7 @@ public class MetalView: NSObject, MTKViewDelegate {
         self.createVertexPoints()
         
         
-        vertexBuffer = device!.makeBuffer(bytes: vertexData, length: MemoryLayout<Vertex>.size * vertexData.count , options:[])
+        vertexBuffer = device!.makeBuffer(bytes: vertexData, length: MemoryLayout<Vertex>.size * vertexData.count, options:[])
         uniformBuffer = device!.makeBuffer(length: MemoryLayout<Float>.size * 16, options: [])
         let bufferPointer = uniformBuffer.contents()
         memcpy(bufferPointer, Matrix().scalingMatrix(Matrix(), 0.5).m, MemoryLayout<Float>.size * 16)
@@ -159,6 +159,7 @@ public class MetalView: NSObject, MTKViewDelegate {
     }
 }
 
+// MARK: - Vertex
 struct Vertex {
     var position: vector_float4
     var color: vector_float4
@@ -167,6 +168,8 @@ struct Vertex {
         color = col
     }
 }
+
+// MARK: - Matrix
 struct Matrix {
     var m: [Float]
     
@@ -186,9 +189,9 @@ struct Matrix {
         matrix.m[15] = 1.0
         return matrix
     }
-    
 }
 
+// MARK: - Hue Circle Metal View
 struct HueCircleMetalView: UIViewRepresentable {
     typealias UIViewType = MTKView
     var size: CGSize
@@ -213,6 +216,7 @@ struct HueCircleMetalView: UIViewRepresentable {
     }
 }
 
+// MARK: - Hue Circle View
 struct HueCircleView: View {
     var body: some View {
         ZStack {
@@ -224,6 +228,7 @@ struct HueCircleView: View {
     }
 }
 
+// MARK: - Preview
 struct HueCircleView_Previews: PreviewProvider {
     static var previews: some View {
         HueCircleView().frame(width: 300, height: 300)

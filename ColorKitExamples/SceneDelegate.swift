@@ -9,6 +9,7 @@
 import UIKit
 import SwiftUI
 
+// MARK: - Scene Delegate
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?

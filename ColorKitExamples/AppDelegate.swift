@@ -8,6 +8,7 @@
 
 import UIKit
 
+// MARK: - App Delegate
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

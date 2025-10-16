@@ -11,6 +11,7 @@ import Sliders
 import Shapes
 import ColorKit
 
+// MARK: - Brightness Slider Style
 struct BrightnessSliderStyle: LSliderStyle {
     let color: ColorToken
     
@@ -42,6 +43,7 @@ struct BrightnessSliderStyle: LSliderStyle {
     }
 }
 
+// MARK: - Saturation Hue Radial Pad
 struct SaturationHueRadialPad: RadialPadStyle {
     let brightness: Double
     var hueColors: [Color] {
@@ -73,6 +75,7 @@ struct SaturationHueRadialPad: RadialPadStyle {
     }
 }
 
+// MARK: - Circular HSB Color Picker
 struct CircularHSBColorPicker: View {
     @Binding var color: ColorToken
     var sliderHeight: CGFloat = 40
@@ -103,6 +106,7 @@ struct CircularHSBColorPicker: View {
     }
 }
 
+// MARK: - Circular HSBPicker Example
 struct CircularHSBPickerExample: View {
     @State var color: ColorToken = ColorToken(hue: 0.3, saturation: 1, brightness: 0.6)
     
@@ -132,6 +136,7 @@ struct CircularHSBPickerExample: View {
     }
 }
 
+// MARK: - Preview
 struct RadialPadExample_Previews: PreviewProvider {
     static var previews: some View {
         CircularHSBPickerExample()

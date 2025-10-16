@@ -7,8 +7,8 @@
 //
 
 import SwiftUI
-import ColorKit
 
+// MARK: - Content View
 struct ContentView: View {
     var body: some View {
         if #available(iOS 17.0, *) {
@@ -66,8 +66,10 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Preview
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().colorScheme(.dark)
+        ContentView()
+            .preferredColorScheme(.dark)
     }
 }

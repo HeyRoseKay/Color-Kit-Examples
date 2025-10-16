@@ -9,6 +9,7 @@
 import SwiftUI
 import ColorKit
 
+// MARK: - Gradients
 let gradient1: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r: 252/255, g: 70/255, b: 107/255, a: 1), location: 0),
                                       .init(color: ColorToken(colorSpace: .sRGB, r: 63/255, g: 94/255, b: 251/255, a: 1), location: 1)]
 let gradient2: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r: 63/255, g: 43/255, b: 150/255, a: 1), location: 0),
@@ -21,7 +22,7 @@ let rainbow: [GradientData.Stop] = [.init(color: ColorToken(colorSpace: .sRGB, r
                                     .init(color: ColorToken(colorSpace: .sRGB, r: 255/255, g: 127/255, b: 0/255, a: 1), location: 0.81),
                                     .init(color: ColorToken(colorSpace: .sRGB, r: 255/255, g: 0/255, b: 0/255, a: 1), location: 0.97)]
 
-// MARK: - Linear
+// MARK: - Simple Linear Example
 struct SimpleLinearExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(.defaultValue)
     var body: some View {
@@ -50,6 +51,7 @@ struct SimpleLinearExample: View {
     }
 }
 
+// MARK: - Linear Gradient Example
 struct LinearGradientExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient2, startPoint: .leading, endPoint: .trailing))
     @State var defaultColor: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.2, b: 0.4)
@@ -141,7 +143,7 @@ struct LinearGradientExample: View {
     }
 }
 
-// MARK: - Radial
+// MARK: - Simple Radial Example
 struct SimpleRadialExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient1, center: .center, startRadius: 0, endRadius: 100))
     var body: some View {
@@ -170,6 +172,7 @@ struct SimpleRadialExample: View {
     }
 }
 
+// MARK: - Radial Gradient Example
 struct RadialGradientExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: gradient1, center: .center, startRadius: 0, endRadius: 100))
     @State var defaultColor: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.2, b: 0.4)
@@ -261,7 +264,7 @@ struct RadialGradientExample: View {
     }
 }
 
-// MARK: - Angular
+// MARK: - Simple Angular Example
 struct SimpleAngularExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: rainbow, center: .center, startAngle:  0, endAngle: 0.95))
     var body: some View {
@@ -290,6 +293,7 @@ struct SimpleAngularExample: View {
     }
 }
 
+// MARK: - Angular Gradient Example
 struct AngularGradientExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(GradientData(name: "My Gradient", stops: rainbow, center: .center, startAngle:  0, endAngle: 0.95))
     @State var defaultColor: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.2, b: 0.4)
@@ -381,7 +385,7 @@ struct AngularGradientExample: View {
     }
 }
 
-// MARK: - Full Example
+// MARK: - Full GradientPicker Example
 struct FullGradientPickerExample: View {
     @ObservedObject var manager: GradientManager = GradientManager(.defaultValue)
     @State var defaultColor: ColorToken = ColorToken(colorSpace: .sRGB, r: 0.2, g: 0.2, b: 0.4)
