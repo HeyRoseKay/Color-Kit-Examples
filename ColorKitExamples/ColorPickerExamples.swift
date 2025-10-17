@@ -252,7 +252,7 @@ struct SingleColorPickerExample: View {
             ZStack {
                 Color(uiColor: .secondarySystemBackground)
                     .edgesIgnoringSafeArea(.all)
-                SingleColorPicker($color)
+                SingleColorPicker($color, withAlpha: true)
             }
                 .navigationTitle("Color Picker")
                 .navigationBarTitleDisplayMode(.inline)
@@ -265,7 +265,7 @@ struct SingleColorPickerExample: View {
                     Color(white: 0.2)
                         .edgesIgnoringSafeArea(.all)
                 }
-                SingleColorPicker($color)
+                SingleColorPicker($color, withAlpha: true)
             }.navigationBarTitle("Color Picker", displayMode: .inline)
         }
     }
@@ -280,7 +280,7 @@ struct PalletteColorPickerExample: View {
             ZStack {
                 Color(uiColor: .secondarySystemBackground)
                     .edgesIgnoringSafeArea(.all)
-                PalletteColorPicker(_manager)
+                PalletteColorPicker(_manager, withAlpha: true)
             }
                 .navigationTitle("Color Picker")
                 .navigationBarTitleDisplayMode(.inline)
@@ -293,7 +293,7 @@ struct PalletteColorPickerExample: View {
                     Color(white: 0.2)
                         .edgesIgnoringSafeArea(.all)
                 }
-                PalletteColorPicker(_manager)
+                PalletteColorPicker(_manager, withAlpha: true)
             }.navigationBarTitle("Color Picker", displayMode: .inline)
         }
     }
