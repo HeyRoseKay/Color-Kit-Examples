@@ -44,6 +44,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3C1192EB2EE9648800B85790 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		893FF2FB2444C23400000662 /* ColorKitExamples.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorKitExamples.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		893FF2FE2444C23400000662 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		893FF3002444C23400000662 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 		893FF2F22444C23400000662 = {
 			isa = PBXGroup;
 			children = (
+				3C1192EB2EE9648800B85790 /* LICENSE */,
 				89B42B0B2445EE9A008D8694 /* ColorKitMedia */,
 				893FF2FD2444C23400000662 /* ColorKitExamples */,
 				893FF2FC2444C23400000662 /* Products */,

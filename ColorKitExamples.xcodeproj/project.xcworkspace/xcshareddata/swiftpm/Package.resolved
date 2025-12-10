@@ -1,0 +1,51 @@
+{
+  "originHash" : "b915007ba37f05d33b859518824ff463d56e5b54602c63c7f8ddf4aaf4afa022",
+  "pins" : [
+    {
+      "identity" : "cgextender",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HeyRoseKay/CGExtender.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "6c7570f28b6b23e487bab12fd5560123e2a941d0"
+      }
+    },
+    {
+      "identity" : "swiftui-bez",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HeyRoseKay/SwiftUI-bez.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "9d806cd58da34ef7f6992811a048836270598853"
+      }
+    },
+    {
+      "identity" : "swiftui-colorkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HeyRoseKay/SwiftUI-ColorKit",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e9103b96d2c60f1a846de363af712ac82b99ac89"
+      }
+    },
+    {
+      "identity" : "swiftui-shapes",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HeyRoseKay/SwiftUI-Shapes.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "29c61048daacf70c671aa897824de920755901ff"
+      }
+    },
+    {
+      "identity" : "swiftui-sliders",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HeyRoseKay/SwiftUI-Sliders.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "254c1133d3cdeb01427c04db3c7a529712555377"
+      }
+    }
+  ],
+  "version" : 3
+}

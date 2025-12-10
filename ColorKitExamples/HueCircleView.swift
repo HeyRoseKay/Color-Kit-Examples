@@ -2,8 +2,8 @@
 //  HueCircleView.swift
 //  MyExamples
 //
-//  Created by Kieran Brown on 4/8/20.
-//  Copyright © 2020 BrownandSons. All rights reserved.
+//  Original by Kieran Brown on 4/8/20.
+//  Updates by Rose Kay in 2025.
 //
 
 import SwiftUI
@@ -11,8 +11,8 @@ import UIKit
 import simd
 import MetalKit
 
-// MARK: - Shader
-let shader = """
+// MARK: - Shader Source
+private let shaderSource = """
     #include <metal_stdlib>
     using namespace metal;
 
@@ -41,23 +41,58 @@ let shader = """
     }
 """
 
-// FIXME: Shader Library needs to be created with the color picker
+// MARK: - Shared Metal Resources
+class SharedMetalResources {
+    static let shared = SharedMetalResources()
+    
+    let device: MTLDevice
+    let library: MTLLibrary
+    let renderPipelineState: MTLRenderPipelineState
+    
+    private init() {
+        guard let device = MTLCreateSystemDefaultDevice() else {
+            fatalError("Metal is not supported on this device")
+        }
+        self.device = device
+        
+        do {
+            self.library = try device.makeLibrary(source: shaderSource, options: nil)
+            
+            guard let vertexFunction = library.makeFunction(name: "vertex_func"),
+                  let fragmentFunction = library.makeFunction(name: "fragment_func") else {
+                fatalError("Failed to create shader functions")
+            }
+            
+            let pipelineDescriptor = MTLRenderPipelineDescriptor()
+            pipelineDescriptor.vertexFunction = vertexFunction
+            pipelineDescriptor.fragmentFunction = fragmentFunction
+            pipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
+            
+            self.renderPipelineState = try device.makeRenderPipelineState(descriptor: pipelineDescriptor)
+        } catch {
+            fatalError("Failed to create Metal library or pipeline state: \(error)")
+        }
+    }
+}
+
 // MARK: - Metal View
 public class MetalView: NSObject, MTKViewDelegate {
-    
-    public var device: MTLDevice!
     var queue: MTLCommandQueue!
     var vertexBuffer: MTLBuffer!
     var uniformBuffer: MTLBuffer!
-    var rps: MTLRenderPipelineState!
     var vertexData: [Vertex] = []
+    
+    private let sharedResources = SharedMetalResources.shared
+    
+    public var device: MTLDevice {
+        return sharedResources.device
+    }
     
     override public init() {
         super.init()
         
         createVertexPoints()
         createBuffers()
-        registerShaders()
     }
     
     func rgb(h: Float, s: Float, v: Float) -> (r: Float, g: Float, b: Float) {
@@ -72,7 +107,7 @@ public class MetalView: NSObject, MTKViewDelegate {
         let q = v * (1 - (s * f))
         let t = v * (1 - (s * (1 - f)))
         
-        switch(i) {
+        switch i {
         case 0:
             return (r: v, g: t, b: p)
         case 1:
@@ -89,73 +124,70 @@ public class MetalView: NSObject, MTKViewDelegate {
     }
     
     fileprivate func createVertexPoints() {
-        func rads(forDegree d: Float)->Float32{
-            return (Float.pi*d)/180
+        func rads(forDegree d: Float) -> Float32 {
+            return (Float.pi * d) / 180
         }
-        var vertices: [Vertex] = []
         
+        var vertices: [Vertex] = []
         let origin: vector_float4 = vector_float4([0, 0, 0, 1])
         
         for i in 0..<720 {
-            let position: vector_float4 = vector_float4([cos(rads(forDegree: Float(i)))*2,sin(rads(forDegree: Float(i)))*2, 0, 1])
-            let color = rgb(h: 720-Float(i), s: 1, v: 1)
+            let position: vector_float4 = vector_float4([
+                cos(rads(forDegree: Float(i))) * 2,
+                sin(rads(forDegree: Float(i))) * 2,
+                0,
+                1
+            ])
+            let color = rgb(h: 720 - Float(i), s: 1, v: 1)
             
             vertices.append(Vertex(pos: position, col: vector_float4([color.r, color.g, color.b, 1])))
-            if (i+1)%2 == 0 {
-                let col = rgb(h: 720-Float(i), s: 0, v: 1)
+            
+            if (i + 1) % 2 == 0 {
+                let col = rgb(h: 720 - Float(i), s: 0, v: 1)
                 let c: vector_float4 = vector_float4([col.r, col.g, col.b, 1])
                 vertices.append(Vertex(pos: origin, col: c))
             }
         }
+        
         self.vertexData = vertices
     }
     
     func createBuffers() {
-        device = MTLCreateSystemDefaultDevice()
         queue = device.makeCommandQueue()
-        self.createVertexPoints()
         
+        vertexBuffer = device.makeBuffer(
+            bytes: vertexData,
+            length: MemoryLayout<Vertex>.size * vertexData.count,
+            options: []
+        )
         
-        vertexBuffer = device!.makeBuffer(bytes: vertexData, length: MemoryLayout<Vertex>.size * vertexData.count, options:[])
-        uniformBuffer = device!.makeBuffer(length: MemoryLayout<Float>.size * 16, options: [])
+        uniformBuffer = device.makeBuffer(
+            length: MemoryLayout<Float>.size * 16,
+            options: []
+        )
+        
         let bufferPointer = uniformBuffer.contents()
         memcpy(bufferPointer, Matrix().scalingMatrix(Matrix(), 0.5).m, MemoryLayout<Float>.size * 16)
-    }
-    
-    func registerShaders() {
-        let input: String?
-
-        do {
-            input = shader
-            let library = try device.makeLibrary(source: input!, options: nil)
-            let vert_func = library.makeFunction(name: "vertex_func")!
-            let frag_func = library.makeFunction(name: "fragment_func")!
-            let rpld = MTLRenderPipelineDescriptor()
-            rpld.vertexFunction = vert_func
-            rpld.fragmentFunction = frag_func
-            rpld.colorAttachments[0].pixelFormat = .bgra8Unorm
-            rps = try device!.makeRenderPipelineState(descriptor: rpld)
-        } catch let e {
-            Swift.print("\(e)")
-        }
     }
     
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
     public func draw(in view: MTKView) {
-        if let rpd = view.currentRenderPassDescriptor,
-           let drawable = view.currentDrawable,
-           let commandBuffer = queue.makeCommandBuffer(),
-           let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: rpd) {
-            rpd.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
-            commandEncoder.setRenderPipelineState(rps)
-            commandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
-            commandEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
-            commandEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: vertexData.count, instanceCount: 1)
-            commandEncoder.endEncoding()
-            commandBuffer.present(drawable)
-            commandBuffer.commit()
+        guard let rpd = view.currentRenderPassDescriptor,
+              let drawable = view.currentDrawable,
+              let commandBuffer = queue.makeCommandBuffer(),
+              let commandEncoder = commandBuffer.makeRenderCommandEncoder(descriptor: rpd) else {
+            return
         }
+        
+        rpd.colorAttachments[0].clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
+        commandEncoder.setRenderPipelineState(sharedResources.renderPipelineState)
+        commandEncoder.setVertexBuffer(vertexBuffer, offset: 0, index: 0)
+        commandEncoder.setVertexBuffer(uniformBuffer, offset: 0, index: 1)
+        commandEncoder.drawPrimitives(type: .triangleStrip, vertexStart: 0, vertexCount: vertexData.count, instanceCount: 1)
+        commandEncoder.endEncoding()
+        commandBuffer.present(drawable)
+        commandBuffer.commit()
     }
 }
 
@@ -163,6 +195,7 @@ public class MetalView: NSObject, MTKViewDelegate {
 struct Vertex {
     var position: vector_float4
     var color: vector_float4
+    
     init(pos: vector_float4, col: vector_float4) {
         position = pos
         color = col
@@ -177,8 +210,7 @@ struct Matrix {
         m = [1, 0, 0, 0,
              0, 1, 0, 0,
              0, 0, 1, 0,
-             0, 0, 0, 1
-        ]
+             0, 0, 0, 1]
     }
     
     func scalingMatrix(_ matrix: Matrix, _ scale: Float) -> Matrix {
@@ -194,25 +226,35 @@ struct Matrix {
 // MARK: - Hue Circle Metal View
 struct HueCircleMetalView: UIViewRepresentable {
     typealias UIViewType = MTKView
-    var size: CGSize
- 
-    var delegate: MetalView
-    init(_ size: CGSize) {
-        self.size = size
-        self.delegate = MetalView()
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
     }
-    
+
     func makeUIView(context: Context) -> MTKView {
-        let view = MTKView(frame: CGRect(x: 0, y: 0, width: size.width, height: size.height), device: delegate.device)
-        view.delegate = delegate
-       
+        let view = MTKView()
+        view.device = context.coordinator.delegate.device
+        view.delegate = context.coordinator.delegate
+        view.isPaused = false
+        view.enableSetNeedsDisplay = false
+        view.framebufferOnly = false
+        view.backgroundColor = .clear
+        view.layer.isOpaque = false
         return view
     }
-    
+
     func updateUIView(_ uiView: UIViewType, context: Context) {
-        uiView.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-        print("updated")
-        
+        DispatchQueue.main.async {
+            uiView.draw()
+        }
+    }
+
+    class Coordinator {
+        let delegate: MetalView
+
+        init() {
+            self.delegate = MetalView()
+        }
     }
 }
 
@@ -221,8 +263,9 @@ struct HueCircleView: View {
     var body: some View {
         ZStack {
             GeometryReader { proxy in
-                HueCircleMetalView(proxy.size)
-                .mask(Circle())
+                HueCircleMetalView()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .mask(Circle())
             }
         }
     }
